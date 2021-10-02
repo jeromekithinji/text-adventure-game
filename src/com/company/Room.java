@@ -12,7 +12,8 @@ public class Room {
     private String south;
 //    private String[] objects;
     private ArrayList<String> objects;
-    private HashMap<String, ArrayList> monster;
+//    private HashMap<String, String> monster;
+    private Monster monster;
 
 
 //    public Room(int id, String description, String north, String south, String[] objects) {
@@ -23,22 +24,23 @@ public class Room {
 ////        this.objects = objects;
 //    }
 
-    public Room(int id, String description, String north, String south, ArrayList<String> objects) {
-        this.id = id;
-        this.description = description;
-        this.north = north;
-        this.south = south;
-        this.objects = objects;
-    }
-//
-//    public Room(int id, String description, String north, String south, ArrayList<String> objects, HashMap<String, ArrayList> monster) {
+//    public Room(int id, String description, String north, String south, ArrayList<String> objects) {
 //        this.id = id;
 //        this.description = description;
 //        this.north = north;
 //        this.south = south;
 //        this.objects = objects;
-//        this.monster = monster;
 //    }
+
+
+    public Room(int id, String description, String north, String south, ArrayList<String> objects, Monster monster) {
+        this.id = id;
+        this.description = description;
+        this.north = north;
+        this.south = south;
+        this.objects = objects;
+        this.monster = monster;
+    }
 
     public int getId() {
         return id;
@@ -88,6 +90,12 @@ public class Room {
         this.objects = objects;
     }
 
+    public Monster getMonster() {
+        return monster;
+    }
 
+    public void setMonster(Monster monster) {
+        this.monster = monster;
+    }
 }
 

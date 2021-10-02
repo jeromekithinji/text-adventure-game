@@ -10,10 +10,14 @@ public class Main {
     public static void main(String[] args) {
 	// write your code here
 
-    Room Room1 = new Room(1, "On the wall are these words in red: KILL ALL MONSTERS OR DIE. There is a door to the south.", "", "room2", new ArrayList<String>(Collections.singleton("sword")));
-    Room Room2 = new Room(2, "You are in another room.", "room1", "", new ArrayList<String>());
+    Monster Werewolf = new Monster("Werewolf", new ArrayList<String>(Collections.singleton("sword")), true);
+    Room Room1 = new Room(1, "On the wall are these words in red: KILL ALL MONSTERS OR DIE. There is a door to the south.", "", "room2", new ArrayList<String>(Collections.singleton("sword")), null);
+    Room Room2 = new Room(2, "You are in another room.", "room1", "", new ArrayList<String>(), Werewolf);
 
     Player Player1 = new Player("room1", "", new ArrayList<String>());
+
+    Game game1 = new Game(new ArrayList<Room>(), Player1);
+
 
         Scanner myScanner = new Scanner(System.in);
         System.out.println("Welcome to Jays adventure!");
@@ -23,7 +27,7 @@ public class Main {
 //        System.out.println("The item(s) in the room are: " + Room1.getObjects());
 //        System.out.println("You have 2 options: 'go south' or 'take weapon'");
 
-        System.out.println("You have 2 options: 'go south' or take " + Room1.getObjects());
+//        System.out.println("You have 2 options: 'go south' or take " + Room1.getObjects());
 
 
         // Hashmap of the options (option: room)/ (option: take)
@@ -33,8 +37,11 @@ public class Main {
         options.put("go south", Room2);
         options.put("go north", Room1);
 
-        String option = myScanner.nextLine();
-        executeOption(option, options, Player1);
+//        String option = myScanner.nextLine();
+//        executeOption(option, options, Player1);
+
+        pickItem(Player1, Room1);
+        killMonster(Player1, Room2);
 
     }
 
@@ -59,21 +66,6 @@ public class Main {
     }
 
 
-//    public static void executeOption(String option) {
-//        switch (option) {
-//            case "go south":
-//                enterRoom(Room2);
-//                break;
-//            case "take ":
-//                pickItem(Player1, Room1);
-//                break;
-//            default:
-//                System.out.println("Pick one of the options");
-//        }
-//
-//    }
-
-
     public static void enterRoom(Room room) {
         System.out.println("You are in a room");
         System.out.println(room.getDescription());
@@ -86,6 +78,9 @@ public class Main {
         }
         if (room.getSouth().length() != 0) {
             System.out.println("There is a door to the South.");
+        }
+        if (room.getMonster() != null && room.getMonster().alive) {
+            System.out.println("There is a monster in the room, it's a " + room.getMonster().name);
         }
         System.out.println("What's your move?");
 //        Scanner myScanner = new Scanner(System.in);
@@ -115,18 +110,18 @@ public class Main {
     // Player has 50/50 chance of living
     // if probability is > 50 then they live and can move on to the other room
     // else they die and game ends
-//    public static void playerkilled(Player currentPlayer, Room currentRoom) {
-//        double deathProbability = ((Math.random() * (100 - 0)) + 0);
-//        if (currentRoom.getEnemy.size != 0) {
-//            if (deathProbability > 50) {
-//                System.out.println("You have been killed by the " + currentRoom.getEnemy);
-//                System.out.println("Game over!");
-//
-//            } else {
-//                System.out.println("You managed to escape the monster");
-//            }
-//        }
-//    }
+    public static void playerkilled(Player currentPlayer, Room currentRoom) {
+        double deathProbability = ((Math.random() * (100 - 0)) + 0);
+        if (currentRoom.getMonster() != null) {
+            if (deathProbability > 50) {
+                System.out.println("You have been killed by the " + currentRoom.getMonster().name);
+                System.out.println("Game over!");
+
+            } else {
+                System.out.println("You managed to escape the monster");
+            }
+        }
+    }
 
     // Prints the instructions the user can input to play
     public static void printControls() {
@@ -139,7 +134,17 @@ public class Main {
     // If player has weapon kill the enemy
     // Else player is killed
     public static void killMonster(Player currentPlayer, Room currentRoom) {
+        String hasWeapons = currentPlayer.getInventory().toString();
+        // Player has a 50/50 chance of living
+        if (hasWeapons.contains(currentRoom.getMonster().getKilledBy().toString())) {
+            currentRoom.getMonster().alive = false;
+            System.out.println("You have killed the " + currentRoom.getMonster().name + ".");
+        }
+        else {
+            // Check the aninmal in the room and check if the player has the right weapon to kill the enemy
+            playerkilled(currentPlayer, currentRoom);
 
+        }
     }
 
 }
